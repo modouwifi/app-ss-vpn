@@ -1,0 +1,14 @@
+{
+"package_id"      : "com.modouwifi.vpnss",
+"os_version"      : "0.6.33",
+"name"            : "迷你shadowsocks",
+"author"          : "shadow",
+"author_mail"     : "shadow@163.com",
+"homepage"        : "",
+"version"         : "0.1.0",
+"release_date"    : "2014.10.10",
+"icon"            : "./res/icon.png",
+"location"        : "internal",
+"description"     : "",
+"instruction"     : "1.xxxx; 2.xxxxx"
+}

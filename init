@@ -1,0 +1,130 @@
+#!/bin/sh
+
+CURDIR=$(cd $(dirname $0) && pwd)
+CONFIDR="$CURDIR/conf"
+# to tp
+TO_TP_TITLE="迷你SS"
+TO_TP_CONF_DIR="/data/conf/launcher/conf.d"
+TO_TP_CONF_FILE="$TO_TP_CONF_DIR/ss.conf"
+TO_TP_ICON="$CURDIR/res/icon.png"
+TO_TP_PRESSED_ICON="$CURDIR/res/picon.png"
+
+usage()
+{
+    echo "ERROR: action missing"
+    echo "syntax: $0 <start|stop|restart|status|config|install|uninstall>"
+    echo "example: $0 start"
+}
+
+
+install()
+{
+    # to tp
+    if [ ! -d $TO_TP_CONF_DIR ]; then
+        mkdir -p $TO_TP_CONF_DIR
+    fi
+    echo "{" > "$TO_TP_CONF_FILE"
+    echo "\"name\" :  \"$TO_TP_TITLE\"," >> "$TO_TP_CONF_FILE"
+    echo "\"icon\" : \"$TO_TP_ICON\"," >> "$TO_TP_CONF_FILE"
+    echo "\"iconPressed\" : \"$TO_TP_PRESSED_ICON\"," >> "$TO_TP_CONF_FILE"
+    echo "\"exec\" : \"$CURDIR/sbin/ss.sh tpstart\"," >> "$TO_TP_CONF_FILE"
+    echo "\"msgNum\" : 4" >> "$TO_TP_CONF_FILE"
+    echo "}" >> "$TO_TP_CONF_FILE"
+    ln -s $CURDIR/lib/libgcc_s.so.1 /lib/libgcc_s.so.1 2>/dev/null
+    return 0;
+}
+
+
+uninstall()
+{
+    rm  /lib/libgcc_s.so.1 2>/dev/null
+    rm  $TO_TP_CONF_FILE
+    echo "uninstall";
+    return 0;
+}
+
+
+stop()
+{
+    $CURDIR/sbin/ss.sh stop
+    return 0;
+}
+
+
+start()
+{
+    ln -s $CURDIR/lib/libgcc_s.so.1 /lib/libgcc_s.so.1 2>/dev/null
+    $CURDIR/sbin/ss.sh start
+    return 0;
+}
+
+
+status()
+{
+    echo "Hello, modou";
+    return 0;
+}
+
+
+config()
+{
+    echo "Hello, modou"
+    return 0;
+}
+
+
+# main
+if [ $# -lt 1 ]; then
+    usage init
+    exit 1
+fi
+
+
+case "$1" in
+    "stop")
+        stop;
+        if [ "0" != "$?" ]; then
+            exit 1;
+        fi
+        exit 0;
+        ;;
+    "start")
+        start;
+        if [ "0" != "$?" ]; then
+            exit 1;
+        fi
+        exit 0;
+        ;;
+    "status")
+        status;
+        if [ "0" != "$?" ]; then
+            exit 1;
+        fi
+        exit 0;
+        ;;
+    "config")
+        config;
+        if [ "0" != "$?" ]; then
+            exit 1;
+        fi
+        exit 0;
+        ;;
+    "install")
+        install;
+        if [ "0" != "$?" ]; then
+            exit 1;
+        fi
+        exit 0;
+        ;;
+    "uninstall")
+        uninstall;
+        if [ "0" != "$?" ]; then
+            exit 1;
+        fi
+        exit 0;
+        ;;
+    *)
+        usage init;
+        exit 1;
+        ;;
+esac
