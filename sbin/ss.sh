@@ -1,11 +1,11 @@
 #!/bin/sh
 
-CURWDIR=$(cd $(dirname $0) && pwd)
-CUSTOMCONF="$CURWDIR/../conf/custom.conf"
+CURWDIR=$(cd $(dirname $0) && pwd) CUSTOMCONF="$CURWDIR/../conf/custom.conf"
 SETCONFDEF="$CURWDIR/../conf/set.def"
 SETCONF="$CURWDIR/../conf/set.conf"
 PIDFILE="$CURWDIR/../conf/custom.pid"
-SSBIN="$CURWDIR/../bin/sslocal"
+SSBIN="$CURWDIR/../bin/ss-redir"
+SSSHELL="$CURWDIR/../sbin/ss-transp.sh "
 
 CMDHEAD='"cmd":"'
 CMDTAIL='",'
@@ -18,7 +18,7 @@ CMDBUTTON22=${CMDHEAD}${SHELLBUTTON22}${CMDTAIL};
 
 testServerStatus()
 {
-    status=`ps | grep sslocal | wc -l`
+    status=`ps | grep ss-redir | wc -l`
     if [ "$status" == "1" ]; then
         echo 0;
     else
@@ -72,7 +72,7 @@ genCustomConfig()
 {
     echo '
     {
-        "title": "迷你shadowsocks",
+        "title": "魔豆ShadowSocks",
     ' > $CUSTOMCONF
 
     content=`genCustomContent`
@@ -135,7 +135,8 @@ ssStart()
     serverport=`head -n 2 $SETCONF | tail -n 1 | cut -d ' ' -f2-`;
     secmode=`head -n 3 $SETCONF | tail -n 1 | cut -d ' ' -f2-`;
     passwd=`head -n 4 $SETCONF | tail -n 1 | cut -d ' ' -f2-`;
-    $SSBIN -s $serveraddr -p $serverport -u 0.0.0.0 -b 1080 -k $passwd -m $secmode -d
+    $SSSHELL $serveraddr $serverport $secmode $passwd &
+    sleep 1
     genCustomConfig;
     pid=`cat $PIDFILE 2>/dev/null`;
     kill -SIGUSR1 $pid >/dev/null 2>&1;
@@ -144,7 +145,10 @@ ssStart()
 
 ssStop()
 {
-    killall sslocal 1>/dev/null 2>&1;
+    killall ss-redir 1>/dev/null 2>&1;
+    iptables -t nat -F SHADOWSOCKS
+    iptables -t nat -F OUTPUT
+    iptables -t nat -D PREROUTING -p tcp -j SHADOWSOCKS
     genCustomConfig;
     pid=`cat $PIDFILE 2>/dev/null`;
     kill -SIGUSR1 $pid >/dev/null 2>&1;

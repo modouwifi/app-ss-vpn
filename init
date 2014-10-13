@@ -3,7 +3,7 @@
 CURDIR=$(cd $(dirname $0) && pwd)
 CONFIDR="$CURDIR/conf"
 # to tp
-TO_TP_TITLE="迷你SS"
+TO_TP_TITLE="魔豆SS"
 TO_TP_CONF_DIR="/data/conf/launcher/conf.d"
 TO_TP_CONF_FILE="$TO_TP_CONF_DIR/ss.conf"
 TO_TP_ICON="$CURDIR/res/icon.png"
@@ -30,14 +30,14 @@ install()
     echo "\"exec\" : \"$CURDIR/sbin/ss.sh tpstart\"," >> "$TO_TP_CONF_FILE"
     echo "\"msgNum\" : 4" >> "$TO_TP_CONF_FILE"
     echo "}" >> "$TO_TP_CONF_FILE"
-    ln -s $CURDIR/lib/libgcc_s.so.1 /lib/libgcc_s.so.1 2>/dev/null
+    #ln -s $CURDIR/lib/libgcc_s.so.1 /lib/libgcc_s.so.1 2>/dev/null
     return 0;
 }
 
 
 uninstall()
 {
-    rm  /lib/libgcc_s.so.1 2>/dev/null
+    #rm  /lib/libgcc_s.so.1 2>/dev/null
     rm  $TO_TP_CONF_FILE
     echo "uninstall";
     return 0;
@@ -53,7 +53,7 @@ stop()
 
 start()
 {
-    ln -s $CURDIR/lib/libgcc_s.so.1 /lib/libgcc_s.so.1 2>/dev/null
+    #ln -s $CURDIR/lib/libgcc_s.so.1 /lib/libgcc_s.so.1 2>/dev/null
     $CURDIR/sbin/ss.sh start
     return 0;
 }
