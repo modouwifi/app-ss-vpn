@@ -2,7 +2,7 @@
 "package_id"      : "com.modouwifi.vpnss",
 "os_version"      : "0.6.33",
 "name"            : "魔豆shadowsocks",
-"author"          : "shadow",
+"author"          : "yinkeedai",
 "author_mail"     : "shadow@shadowsocks.org",
 "homepage"        : "shadowsocks.org",
 "version"         : "0.2.0",

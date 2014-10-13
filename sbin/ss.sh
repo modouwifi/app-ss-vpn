@@ -136,7 +136,7 @@ ssStart()
     secmode=`head -n 3 $SETCONF | tail -n 1 | cut -d ' ' -f2-`;
     passwd=`head -n 4 $SETCONF | tail -n 1 | cut -d ' ' -f2-`;
     $SSSHELL $serveraddr $serverport $secmode $passwd &
-    sleep 1
+    sleep 2
     genCustomConfig;
     pid=`cat $PIDFILE 2>/dev/null`;
     kill -SIGUSR1 $pid >/dev/null 2>&1;
@@ -146,9 +146,9 @@ ssStart()
 ssStop()
 {
     killall ss-redir 1>/dev/null 2>&1;
-    iptables -t nat -F SHADOWSOCKS
-    iptables -t nat -F OUTPUT
-    iptables -t nat -D PREROUTING -p tcp -j SHADOWSOCKS
+    iptables -t nat -F SHADOWSOCKS 1>/dev/null 2>&1
+    iptables -t nat -F OUTPUT 1>/dev/null 2>&1
+    iptables -t nat -D PREROUTING -p tcp -j SHADOWSOCKS 1>/dev/null 2>&1
     genCustomConfig;
     pid=`cat $PIDFILE 2>/dev/null`;
     kill -SIGUSR1 $pid >/dev/null 2>&1;
