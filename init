@@ -16,7 +16,6 @@ usage()
     echo "example: $0 start"
 }
 
-
 install()
 {
     # to tp
@@ -34,7 +33,6 @@ install()
     return 0;
 }
 
-
 uninstall()
 {
     #rm  /lib/libgcc_s.so.1 2>/dev/null
@@ -43,21 +41,17 @@ uninstall()
     return 0;
 }
 
-
 stop()
 {
     $CURDIR/sbin/ss.sh stop
     return 0;
 }
 
-
 start()
 {
-    #ln -s $CURDIR/lib/libgcc_s.so.1 /lib/libgcc_s.so.1 2>/dev/null
     $CURDIR/sbin/ss.sh start
     return 0;
 }
-
 
 status()
 {
@@ -65,13 +59,11 @@ status()
     return 0;
 }
 
-
 config()
 {
     echo "Hello, modou"
     return 0;
 }
-
 
 # main
 if [ $# -lt 1 ]; then
