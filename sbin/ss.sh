@@ -196,8 +196,9 @@ ssStop()
 {
     pdnsdDisable;
     killall ss-redir 1>/dev/null 2>&1;
+    iptables -t nat -F PDNSD 1>/dev/null 2>&1
+    iptables -t nat -D OUTPUT -p tcp -j PDNSD 1>/dev/null 2>&1
     iptables -t nat -F SHADOWSOCKS 1>/dev/null 2>&1
-    iptables -t nat -F OUTPUT 1>/dev/null 2>&1
     iptables -t nat -D PREROUTING -p tcp -j SHADOWSOCKS 1>/dev/null 2>&1
     genCustomConfig;
     pid=`cat $PIDFILE 2>/dev/null`;

@@ -8,6 +8,8 @@ ssIptablesAdd()
 {
     # create new chain
     iptables -t nat -N SHADOWSOCKS 1>/dev/null 2>&1
+    iptables -t nat -N PDNSD 1>/dev/null 2>&1
+    iptables -t nat -A PDNSD -d 8.8.8.8 -p tcp -j REDIRECT --to-ports 1080
     # ignore server addr
     iptables -t nat -A SHADOWSOCKS -d $serveraddr -j RETURN
     # ignore LANs addr
@@ -21,11 +23,14 @@ ssIptablesAdd()
     iptables -t nat -A SHADOWSOCKS -p tcp -j REDIRECT --to-ports 1080
     # apply the rules
     iptables -t nat -I PREROUTING -p tcp -j SHADOWSOCKS
+    iptables -t nat -I OUTPUT -p tcp -j PDNSD
     return 0
 }
 
 ssIptablesClear()
 {
+    iptables -t nat -F PDNSD
+    iptables -t nat -D OUTPUT -p tcp -j PDNSD
     iptables -t nat -F SHADOWSOCKS
     iptables -t nat -D PREROUTING -p tcp -j SHADOWSOCKS
 }
