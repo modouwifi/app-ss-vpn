@@ -3,6 +3,7 @@
 CURWDIR=$(cd $(dirname $0) && pwd) CUSTOMCONF="$CURWDIR/../conf/custom.conf"
 SETCONFDEF="$CURWDIR/../conf/set.def"
 SETCONF="$CURWDIR/../conf/set.conf"
+DATAJSON="$CURWDIR/../conf/data.json"
 PDNSDCONFILE="$CURWDIR/../conf/pdnsd.conf"
 PIDFILE="$CURWDIR/../conf/custom.pid"
 SSBIN="$CURWDIR/../bin/ss-redir"
@@ -95,8 +96,10 @@ genCustomContent()
 
     if [ "$isserverstart" == "1" ]; then
         contentbody="**服务已启动**"
+        /system/sbin/json4sh.sh "set" $DATAJSON state_shadow_socks value true
     else
         contentbody="**服务未启动**"
+        /system/sbin/json4sh.sh "set" $DATAJSON state_shadow_socks value false
     fi
 
     if [ "$isserverconfig" == "1" ]; then
@@ -168,6 +171,14 @@ ssTpStart()
 ssConfig()
 {
     generate-config-file $SETCONFDEF
+    serveraddr=`head -n 1 $SETCONFDEF | cut -d ' ' -f2-`;
+    serverport=`head -n 2 $SETCONFDEF | tail -n 1 | cut -d ' ' -f2-`;
+    secmode=`head -n 3 $SETCONFDEF | tail -n 1 | cut -d ' ' -f2-`;
+    passwd=`head -n 4 $SETCONFDEF | tail -n 1 | cut -d ' ' -f2-`;
+    /system/sbin/json4sh.sh "set" $DATAJSON service_ip_address value $serveraddr
+    /system/sbin/json4sh.sh "set" $DATAJSON port_shadow_socks  value $serverport
+    /system/sbin/json4sh.sh "set" $DATAJSON method_security    value $secmode
+    /system/sbin/json4sh.sh "set" $DATAJSON password_shadow_socks value $passwd
     cp $SETCONFDEF $SETCONF
     genCustomConfig;
     pid=`cat $PIDFILE 2>/dev/null`;
@@ -178,10 +189,10 @@ ssConfig()
 ssStart()
 {
     pdnsdEnable;
-    serveraddr=`head -n 1 $SETCONF | cut -d ' ' -f2-`;
-    serverport=`head -n 2 $SETCONF | tail -n 1 | cut -d ' ' -f2-`;
-    secmode=`head -n 3 $SETCONF | tail -n 1 | cut -d ' ' -f2-`;
-    passwd=`head -n 4 $SETCONF | tail -n 1 | cut -d ' ' -f2-`;
+    serveraddr=`/system/sbin/json4sh.sh "get" $DATAJSON service_ip_address value`
+    serverport=`/system/sbin/json4sh.sh "get" $DATAJSON port_shadow_socks  value`
+    secmode=`/system/sbin/json4sh.sh "get" $DATAJSON method_security    value`
+    passwd=`/system/sbin/json4sh.sh "get" $DATAJSON password_shadow_socks value`
     $SSSHELL $serveraddr $serverport $secmode $passwd &
     chown matrix $PDNSDCONFILE 1>/dev/null 2>&1
     $PDNSDBIN -c $PDNSDCONFILE &
@@ -196,6 +207,8 @@ ssStop()
 {
     pdnsdDisable;
     killall ss-redir 1>/dev/null 2>&1;
+    killall sswhitelist.sh 1>/dev/null 2>&1;
+    killall ss-transp.sh 1>/dev/null 2>&1;
     iptables -t nat -F PDNSD 1>/dev/null 2>&1
     iptables -t nat -D OUTPUT -p tcp -j PDNSD 1>/dev/null 2>&1
     iptables -t nat -F SHADOWSOCKS 1>/dev/null 2>&1

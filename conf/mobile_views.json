@@ -1,0 +1,99 @@
+{
+    "main_page_shadow_socks" : {
+      "id" : "main_page_shadow_socks",
+      "name" : "魔豆ShadowSocks",
+      "type" : "main",
+      "data" : {
+        "state_shadow_socks" : {
+          "id" : "state_shadow_socks",
+          "access" : "RO"
+        },
+        "service_ip_address" : {
+          "id" : "service_ip_address",
+          "access" : "RO"
+        },
+        "port_shadow_socks" : {
+          "id" : "port_shadow_socks",
+          "access" : "RO"
+        },
+        "method_security" : {
+          "id" : "method_security",
+          "access" : "RO"
+        },
+        "password_shadow_socks" : {
+          "id" : "password_shadow_socks",
+          "access" : "RO"
+        }
+      },
+      "menu" : {
+        "1" : {
+          "index" : 1,
+          "text" : "开启服务",
+          "type" : "COMMAND",
+          "action" : "start_shadow_socks",
+          "input" : "params"
+        },
+        "2" : {
+          "index" : 2,
+          "text" : "服务控制",
+          "type" : "MENU",
+          "items" : {
+            "1" : {
+              "index" : 1,
+              "text" : "开启服务",
+              "type" : "COMMAND",
+              "action" : "start_shadow_socks",
+              "input" : "params"
+            },
+            "2" : {
+              "index" : 2,
+              "text" : "关闭服务",
+              "type" : "COMMAND",
+              "action" : "stop_shadow_socks",
+              "input" : "params"
+            },
+            "3" : {
+              "index" : 3,
+              "text" : "配置账号",
+              "type" : "VIEW",
+              "viewid" : "page_account_setting"
+            }
+          }
+        },
+        "3" : {
+          "index" : 3,
+          "text" : "配置账号",
+          "type" : "VIEW",
+          "viewid" : "page_account_setting"
+        }
+      }
+    },
+    "page_account_setting" : {
+      "id" : "page_account_setting",
+      "name" : "配置账号",
+      "type" : "sub",
+      "data" : {
+        "state_shadow_socks" : {
+          "id" : "state_shadow_socks",
+          "access" : "RW"
+        },
+        "service_ip_address" : {
+          "id" : "service_ip_address",
+          "access" : "RW"
+        },
+        "port_shadow_socks" : {
+          "id" : "port_shadow_socks",
+          "access" : "RW"
+        },
+        "method_security" : {
+          "id" : "method_security",
+          "access" : "RW"
+        },
+        "password_shadow_socks" : {
+          "id" : "password_shadow_socks",
+          "access" : "RW"
+        }
+      }
+    }
+ }
+

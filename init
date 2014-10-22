@@ -59,9 +59,10 @@ status()
     return 0;
 }
 
-config()
+set_config()
 {
-    echo "Hello, modou"
+    $CURDIR/sbin/ss.sh stop
+    $CURDIR/sbin/ss.sh start
     return 0;
 }
 
@@ -94,8 +95,8 @@ case "$1" in
         fi
         exit 0;
         ;;
-    "config")
-        config;
+    "set_config")
+        set_config;
         if [ "0" != "$?" ]; then
             exit 1;
         fi

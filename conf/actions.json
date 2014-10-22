@@ -1,0 +1,15 @@
+{
+    "start_shadow_socks" : {
+      "id" : "start_shadow_socks",
+      "is_sync" : false,
+      "cmd"   : "./init start",
+      "relative": true
+    },
+    "stop_shadow_socks" : {
+      "id" : "stop_shadow_socks",
+      "is_sync" : false,
+      "cmd"   : "./init stop",
+      "relative": true
+    }
+ }
+

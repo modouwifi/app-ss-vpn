@@ -1,0 +1,55 @@
+{
+    "state_shadow_socks" : {
+      "id" : "state_shadow_socks",
+      "name" : "状态",
+      "value" : false,
+      "group_id" : "main_info_display",
+      "type" : {
+        "class" : "BOOL"
+      }
+    },
+    "service_ip_address" : {
+      "id" : "service_ip_address",
+      "name" : "服务地址",
+      "value" : "",
+      "group_id" : "main_info_display",
+      "type" : {
+        "class" : "STRING",
+        "min" : 7,
+        "max" : 15
+      }
+    },
+    "port_shadow_socks" : {
+      "id" : "port_shadow_socks",
+      "name" : "端口号",
+      "value" : 0,
+      "group_id" : "main_info_display",
+      "type" : {
+        "class" : "INT",
+        "min" : 10,
+        "max" : 9999999
+      }
+    },
+    "method_security" : {
+      "id" : "method_security",
+      "name" : "加密方式",
+      "value" : "",
+      "group_id" : "main_info_display",
+      "type" : {
+        "class" : "ENUM",
+        "items" : ["aes-256-cfb", "aes-192-cfb", "aes-128-cfb", "bf-cfb", "camellia-128-cfb", "camellia-192-cfb", "camellia-256-cfb", "cast5-cfb", "des-cfb", "idea-cfb", "rc2-cfb", "rc4", "seed-cfb"],
+        "multiple" : false
+      }
+    },
+    "password_shadow_socks" : {
+      "id" : "password_shadow_socks",
+      "name" : "密码",
+      "value" : "",
+      "group_id" : "main_info_display",
+      "type" : {
+        "class" : "STRING",
+        "min" : 6,
+        "max" : 30
+      }
+    }
+ }
