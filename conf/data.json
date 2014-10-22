@@ -11,7 +11,7 @@
     "service_ip_address" : {
       "id" : "service_ip_address",
       "name" : "服务地址",
-      "value" : "",
+      "value" : "0.0.0.0",
       "group_id" : "main_info_display",
       "type" : {
         "class" : "STRING",
@@ -33,7 +33,7 @@
     "method_security" : {
       "id" : "method_security",
       "name" : "加密方式",
-      "value" : "",
+      "value" : "未设置",
       "group_id" : "main_info_display",
       "type" : {
         "class" : "ENUM",
@@ -44,7 +44,7 @@
     "password_shadow_socks" : {
       "id" : "password_shadow_socks",
       "name" : "密码",
-      "value" : "",
+      "value" : "未设置",
       "group_id" : "main_info_display",
       "type" : {
         "class" : "STRING",

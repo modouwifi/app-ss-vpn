@@ -64,6 +64,7 @@ status()
 
 set_config()
 {
+    $CURDIR/sbin/ss.sh syncConfig
     $CURDIR/sbin/ss.sh stop
     $CURDIR/sbin/ss.sh start
     /system/sbin/appInfo.sh set_status $PACKAGEID ISRUNNING

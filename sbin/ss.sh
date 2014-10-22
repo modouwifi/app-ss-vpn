@@ -176,6 +176,18 @@ ssConfig()
     serverport=`head -n 2 $SETCONFDEF | tail -n 1 | cut -d ' ' -f2-`;
     secmode=`head -n 3 $SETCONFDEF | tail -n 1 | cut -d ' ' -f2-`;
     passwd=`head -n 4 $SETCONFDEF | tail -n 1 | cut -d ' ' -f2-`;
+    if [ "$serveraddr" == "" ]; then
+        serveraddr="0.0.0.0"
+    fi
+    if [ "$serverport" == "" ]; then
+        serverport=0
+    fi
+    if [ "$secmode" == "" ]; then
+        secmode="未设置"
+    fi
+    if [ "$passwd" == "" ]; then
+        passwd="未设置"
+    fi
     /system/sbin/json4sh.sh "set" $DATAJSON service_ip_address value $serveraddr
     /system/sbin/json4sh.sh "set" $DATAJSON port_shadow_socks  value $serverport
     /system/sbin/json4sh.sh "set" $DATAJSON method_security    value $secmode
@@ -185,6 +197,31 @@ ssConfig()
     pid=`cat $PIDFILE 2>/dev/null`;
     kill -SIGUSR1 $pid >/dev/null 2>&1;
     return 0;
+}
+
+syncConfig()
+{
+    serveraddr=`/system/sbin/json4sh.sh "get" $DATAJSON service_ip_address value`
+    serverport=`/system/sbin/json4sh.sh "get" $DATAJSON port_shadow_socks  value`
+    secmode=`/system/sbin/json4sh.sh "get" $DATAJSON method_security    value`
+    passwd=`/system/sbin/json4sh.sh "get" $DATAJSON password_shadow_socks value`
+    if [ "$serveraddr" == "" ]; then
+        serveraddr="0.0.0.0"
+    fi
+    if [ "$serverport" == "" ]; then
+        serverport=0
+    fi
+    if [ "$secmode" == "" ]; then
+        secmode="未设置"
+    fi
+    if [ "$passwd" == "" ]; then
+        passwd="未设置"
+    fi
+    echo "服务地址: $serveraddr
+端口号: $serverport
+加密方式: $secmode
+密码: $passwd" > $SETCONFDEF
+    cp $SETCONFDEF $SETCONF
 }
 
 ssStart()
@@ -197,7 +234,7 @@ ssStart()
     $SSSHELL $serveraddr $serverport $secmode $passwd &
     chown matrix $PDNSDCONFILE 1>/dev/null 2>&1
     $PDNSDBIN -c $PDNSDCONFILE &
-    sleep 2
+    sleep 1
     genCustomConfig;
     pid=`cat $PIDFILE 2>/dev/null`;
     kill -SIGUSR1 $pid >/dev/null 2>&1;
@@ -214,6 +251,7 @@ ssStop()
     iptables -t nat -D OUTPUT -p tcp -j PDNSD 1>/dev/null 2>&1
     iptables -t nat -F SHADOWSOCKS 1>/dev/null 2>&1
     iptables -t nat -D PREROUTING -p tcp -j SHADOWSOCKS 1>/dev/null 2>&1
+    sleep 1
     genCustomConfig;
     pid=`cat $PIDFILE 2>/dev/null`;
     kill -SIGUSR1 $pid >/dev/null 2>&1;
@@ -227,6 +265,10 @@ case "$1" in
         ;;
     "config")
         ssConfig;
+        exit 0;
+        ;;
+    "syncConfig")
+        syncConfig;
         exit 0;
         ;;
     "start")
