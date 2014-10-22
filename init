@@ -2,6 +2,7 @@
 
 CURDIR=$(cd $(dirname $0) && pwd)
 CONFIDR="$CURDIR/conf"
+PACKAGEID="com.modouwifi.vpnss"
 # to tp
 TO_TP_TITLE="魔豆SS"
 TO_TP_CONF_DIR="/data/conf/launcher/conf.d"
@@ -44,12 +45,14 @@ uninstall()
 stop()
 {
     $CURDIR/sbin/ss.sh stop
+    /system/sbin/appInfo.sh set_status $PACKAGEID NOTRUNNING
     return 0;
 }
 
 start()
 {
     $CURDIR/sbin/ss.sh start
+    /system/sbin/appInfo.sh set_status $PACKAGEID ISRUNNING
     return 0;
 }
 
@@ -63,6 +66,7 @@ set_config()
 {
     $CURDIR/sbin/ss.sh stop
     $CURDIR/sbin/ss.sh start
+    /system/sbin/appInfo.sh set_status $PACKAGEID ISRUNNING
     return 0;
 }
 
