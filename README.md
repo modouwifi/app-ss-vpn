@@ -1,4 +1,4 @@
-modouSS
+ss-vpn
 ======
 
 ## 魔豆ShadowSocks
