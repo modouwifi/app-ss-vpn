@@ -122,7 +122,7 @@ genCustomConfig()
 {
     echo '
     {
-        "title": "魔豆ShadowSocks",
+        "title": "ShadowSocks VPN",
     ' > $CUSTOMCONF
 
     content=`genCustomContent`

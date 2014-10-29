@@ -1,14 +1,14 @@
 {
 "package_id"      : "com.modouwifi.vpnss",
 "os_version"      : "0.7.01",
-"name"            : "魔豆shadowsocks",
+"name"            : "ShadowSocks VPN",
 "author"          : "yinkeedai",
-"author_mail"     : "shadow@shadowsocks.org",
+"author_mail"     : "yinkeedai@163.com",
 "homepage"        : "shadowsocks.org",
 "version"         : "0.3.2",
 "release_date"    : "2014.10.28",
 "icon"            : "./res/icon.png",
 "location"        : "internal",
-"description"     : "魔豆shadowsocks",
+"description"     : "实现企业和个人用户绕开防火墙，以便更好地开展工作",
 "instruction"     : "1.xxxx; 2.xxxxx"
 }

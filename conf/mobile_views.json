@@ -73,11 +73,7 @@
       "name" : "配置账号",
       "type" : "sub",
       "data" : {
-        "state_shadow_socks" : {
-          "id" : "state_shadow_socks",
-          "access" : "RW"
-        },
-        "service_ip_address" : {
+          "service_ip_address" : {
           "id" : "service_ip_address",
           "access" : "RW"
         },
