@@ -1,7 +1,7 @@
-ss-vpn
+SS-VPN
 ======
 
-## 魔豆ShadowSocks
+## 可运行在路由器上的ShadowSocks客户端
 
     * 实现企业和个人用户绕开防火墙，以便更好地开展工作。
 
