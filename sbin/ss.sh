@@ -2,8 +2,7 @@
 
 CURWDIR=$(cd $(dirname $0) && pwd)
 CUSTOMCONF="$CURWDIR/../conf/custom.conf"
-SETCONFDEF="$CURWDIR/../conf/set.def"
-SETCONF="$CURWDIR/../conf/set.conf"
+SETCONF="$CURWDIR/../data/customset.conf"
 DATAJSON="$CURWDIR/../conf/data.json"
 PDNSDCONFILE="$CURWDIR/../conf/pdnsd.conf"
 PIDFILE="$CURWDIR/../conf/custom.pid"
@@ -12,6 +11,8 @@ SSSHELL="$CURWDIR/../sbin/ss-transp.sh "
 PDNSDBIN="$CURWDIR/../bin/pdnsd"
 DNSMASQCONF="/system/conf/dnsmasq.conf"
 PDNSDCONF="conf-dir=$CURWDIR/../conf/dnsmasq";
+SSDNSMASQCONF="$CURWDIR/../conf/ss-vpn-dnsmasq.conf"
+TODNSMASQDIR="/data/conf/dns"
 
 CMDHEAD='"cmd":"'
 CMDTAIL='",'
@@ -25,18 +26,12 @@ CMDBUTTON22=${CMDHEAD}${SHELLBUTTON22}${CMDTAIL};
 ## add the change of dnsmasq conf for pdnsd
 ## fork from HDNS
 delConfDir() {
-    /system/sbin/writesys.sh
-    local pdnsddir=`echo "$CURWDIR/../conf/dnsmasq" | sed -e 's:/:\\\\/:g'`
-    /bin/sed -ie "/conf-dir=$pdnsddir/d" $DNSMASQCONF 1>/dev/null 2>&1
-    /system/sbin/writesys.sh close
+    rm $TODNSMASQDIR/ss-vpn-dnsmasq.conf
 }
 
 addConfDir() {
-    /system/sbin/writesys.sh
-    local pdnsddir=`echo "$CURWDIR/../conf/dnsmasq" | sed -e 's:/:\\\\/:g'`
-    /bin/sed -ie "/conf-dir=$pdnsddir/d" $DNSMASQCONF 1>/dev/null 2>&1
-    echo $PDNSDCONF >> $DNSMASQCONF
-    /system/sbin/writesys.sh close
+    echo "$PDNSDCONF" > $SSDNSMASQCONF
+    cp $SSDNSMASQCONF $TODNSMASQDIR 1>/dev/null 2>&1
 }
 
 dnsStop() {
@@ -171,11 +166,11 @@ ssTpStart()
 
 ssConfig()
 {
-    generate-config-file $SETCONFDEF
-    serveraddr=`head -n 1 $SETCONFDEF | cut -d ' ' -f2-`;
-    serverport=`head -n 2 $SETCONFDEF | tail -n 1 | cut -d ' ' -f2-`;
-    secmode=`head -n 3 $SETCONFDEF | tail -n 1 | cut -d ' ' -f2-`;
-    passwd=`head -n 4 $SETCONFDEF | tail -n 1 | cut -d ' ' -f2-`;
+    generate-config-file $SETCONF
+    serveraddr=`head -n 1 $SETCONF | cut -d ' ' -f2-`;
+    serverport=`head -n 2 $SETCONF | tail -n 1 | cut -d ' ' -f2-`;
+    secmode=`head -n 3 $SETCONF | tail -n 1 | cut -d ' ' -f2-`;
+    passwd=`head -n 4 $SETCONF | tail -n 1 | cut -d ' ' -f2-`;
     if [ "$serveraddr" == "" ]; then
         serveraddr="0.0.0.0"
     fi
@@ -192,7 +187,6 @@ ssConfig()
     /system/sbin/json4sh.sh "set" $DATAJSON port_shadow_socks  value $serverport
     /system/sbin/json4sh.sh "set" $DATAJSON method_security    value $secmode
     /system/sbin/json4sh.sh "set" $DATAJSON password_shadow_socks value $passwd
-    cp $SETCONFDEF $SETCONF
     genCustomConfig;
     pid=`cat $PIDFILE 2>/dev/null`;
     kill -SIGUSR1 $pid >/dev/null 2>&1;
@@ -220,8 +214,7 @@ syncConfig()
     echo "服务地址: $serveraddr
 端口号: $serverport
 加密方式: $secmode
-密码: $passwd" > $SETCONFDEF
-    cp $SETCONFDEF $SETCONF
+密码: $passwd" > $SETCONF
 }
 
 ssStart()

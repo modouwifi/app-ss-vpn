@@ -3,6 +3,7 @@
 CURDIR=$(cd $(dirname $0) && pwd)
 CONFIDR="$CURDIR/conf"
 PACKAGEID="com.modouwifi.vpnss"
+TODNSMASQCONF="/data/conf/dns/ss-vpn-dnsmasq.conf"
 # to tp
 TO_TP_TITLE="SS-VPN"
 TO_TP_CONF_DIR="/data/conf/launcher/conf.d"
@@ -37,6 +38,7 @@ install()
 uninstall()
 {
     #rm  /lib/libgcc_s.so.1 2>/dev/null
+    rm  $TODNSMASQCONF 2>/dev/null
     rm  $TO_TP_CONF_FILE
     echo "uninstall";
     return 0;

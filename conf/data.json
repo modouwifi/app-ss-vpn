@@ -47,7 +47,7 @@
       "value" : "未设置",
       "group_id" : "main_info_display",
       "type" : {
-        "class" : "STRING",
+        "class" : "PASSWORD",
         "min" : 6,
         "max" : 30
       }
