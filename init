@@ -4,7 +4,7 @@ CURDIR=$(cd $(dirname $0) && pwd)
 CONFIDR="$CURDIR/conf"
 PACKAGEID="com.modouwifi.vpnss"
 # to tp
-TO_TP_TITLE="ss-vpn"
+TO_TP_TITLE="SS-VPN"
 TO_TP_CONF_DIR="/data/conf/launcher/conf.d"
 TO_TP_CONF_FILE="$TO_TP_CONF_DIR/ss.conf"
 TO_TP_ICON="$CURDIR/res/icon.png"

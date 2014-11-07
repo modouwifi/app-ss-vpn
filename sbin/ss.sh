@@ -1,6 +1,6 @@
 #!/bin/sh
 
-CURWDIR=$(cd $(dirname $0) && pwd) 
+CURWDIR=$(cd $(dirname $0) && pwd)
 CUSTOMCONF="$CURWDIR/../conf/custom.conf"
 SETCONFDEF="$CURWDIR/../conf/set.def"
 SETCONF="$CURWDIR/../conf/set.conf"
