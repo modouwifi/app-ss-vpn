@@ -1,7 +1,8 @@
 {
 "package_id"      : "com.modouwifi.vpnss",
 "os_version"      : "0.7.01",
-"name"            : "ShadowSocks VPN",
+"name"            : "ShadowSocksVPN",
+"display_name"    : "ShadowSocks VPN",
 "author"          : "yinkeedai",
 "author_mail"     : "yinkeedai@163.com",
 "homepage"        : "shadowsocks.org",
