@@ -3,6 +3,7 @@
 CURWDIR=$(cd $(dirname $0) && pwd)
 CUSTOMCONF="$CURWDIR/../conf/custom.conf"
 
+[ -f $CURWDIR/../data ] && rm $CURWDIR/../data # since the framework bug
 [ ! -d $CURWDIR/../data/ ] && mkdir $CURWDIR/../data/
 CUSTOMSETCONF="$CURWDIR/../data/customset.conf"
 SETCONF="$CURWDIR/../conf/set.conf"
