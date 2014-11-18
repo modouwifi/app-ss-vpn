@@ -26,6 +26,11 @@ ssIptablesAdd()
     iptables -t nat -A SHADOWSOCKS -d 127.0.0.0/8 -j RETURN
     iptables -t nat -A SHADOWSOCKS -d 10.0.0.0/8 -j RETURN
     iptables -t nat -A SHADOWSOCKS -d 192.168.0.0/16 -j RETURN
+    # anything else will be redirected to ss local port
+    iptables -t nat -A SHADOWSOCKS -p tcp -j REDIRECT --to-ports 1080
+    # apply the rules
+    iptables -t nat -I PREROUTING -p tcp -j SHADOWSOCKS
+    iptables -t nat -I OUTPUT -p tcp -j PDNSD
     # add the whitelist
     if [ -f $DEFAULTWHITESHELL ]; then
         $DEFAULTWHITESHELL 2>/dev/null
@@ -33,11 +38,7 @@ ssIptablesAdd()
     if [ -f $CUSTOMWHITESHELL ]; then
          $CUSTOMWHITESHELL 2>/dev/null
     fi
-    # anything else will be redirected to ss local port
-    iptables -t nat -A SHADOWSOCKS -p tcp -j REDIRECT --to-ports 1080
-    # apply the rules
-    iptables -t nat -I PREROUTING -p tcp -j SHADOWSOCKS
-    iptables -t nat -I OUTPUT -p tcp -j PDNSD
+
     return 0
 }
 
@@ -84,7 +85,7 @@ genDefaultShell()
     echo "#!/bin/sh" > $DEFAULTWHITESHELL
     for lines in `cat $DEFAULTLIST`; do
         # if the format is wrong, we should get the back up
-        echo "iptables -t nat -A SHADOWSOCKS -d $lines -j RETURN" >> $DEFAULTWHITESHELL
+        echo "iptables -t nat -I SHADOWSOCKS 6 -d $lines -j RETURN" >> $DEFAULTWHITESHELL
     done
     chmod +x $DEFAULTWHITESHELL
     return 0

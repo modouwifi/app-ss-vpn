@@ -2,7 +2,13 @@
 
 CURWDIR=$(cd $(dirname $0) && pwd)
 CUSTOMCONF="$CURWDIR/../conf/custom.conf"
-SETCONF="$CURWDIR/../data/customset.conf"
+
+[ ! -d $CURWDIR/../data/ ] && mkdir $CURWDIR/../data/
+CUSTOMSETCONF="$CURWDIR/../data/customset.conf"
+SETCONF="$CURWDIR/../conf/set.conf"
+[ ! -f $CUSTOMSETCONF ] && cp $SETCONF $CUSTOMSETCONF
+
+PACKAGEID="com.modouwifi.vpnss"
 DATAJSON="$CURWDIR/../conf/data.json"
 PDNSDCONFILE="$CURWDIR/../conf/pdnsd.conf"
 PIDFILE="$CURWDIR/../conf/custom.pid"
@@ -72,7 +78,7 @@ testServerStatus()
 
 testConfigStatus()
 {
-    if [ -f "$SETCONF" ]; then
+    if [ -f "$CUSTOMSETCONF" ]; then
         echo 1;
     else
         echo 0;
@@ -99,11 +105,11 @@ genCustomContent()
     fi
 
     if [ "$isserverconfig" == "1" ]; then
-        counts=`cat $SETCONF | wc -l`
+        counts=`cat $CUSTOMSETCONF | wc -l`
         configcontent=""
         for count in $(seq $counts)
         do
-            line=`head -n $count $SETCONF | tail -n 1`
+            line=`head -n $count $CUSTOMSETCONF | tail -n 1`
             configcontent=${configcontent}${line}${linetag}
         done
         contentbody=${contentbody}${linetag}${configcontent};
@@ -166,11 +172,11 @@ ssTpStart()
 
 ssConfig()
 {
-    generate-config-file $SETCONF
-    serveraddr=`head -n 1 $SETCONF | cut -d ' ' -f2-`;
-    serverport=`head -n 2 $SETCONF | tail -n 1 | cut -d ' ' -f2-`;
-    secmode=`head -n 3 $SETCONF | tail -n 1 | cut -d ' ' -f2-`;
-    passwd=`head -n 4 $SETCONF | tail -n 1 | cut -d ' ' -f2-`;
+    generate-config-file $CUSTOMSETCONF
+    serveraddr=`head -n 1 $CUSTOMSETCONF | cut -d ' ' -f2-`;
+    serverport=`head -n 2 $CUSTOMSETCONF | tail -n 1 | cut -d ' ' -f2-`;
+    secmode=`head -n 3 $CUSTOMSETCONF | tail -n 1 | cut -d ' ' -f2-`;
+    passwd=`head -n 4 $CUSTOMSETCONF | tail -n 1 | cut -d ' ' -f2-`;
     if [ "$serveraddr" == "" ]; then
         serveraddr="0.0.0.0"
     fi
@@ -214,7 +220,7 @@ syncConfig()
     echo "服务地址: $serveraddr
 端口号: $serverport
 加密方式: $secmode
-密码: $passwd" > $SETCONF
+密码: $passwd" > $CUSTOMSETCONF
 }
 
 ssStart()
@@ -231,6 +237,7 @@ ssStart()
     genCustomConfig;
     pid=`cat $PIDFILE 2>/dev/null`;
     kill -SIGUSR1 $pid >/dev/null 2>&1;
+    /system/sbin/appInfo.sh set_status $PACKAGEID ISRUNNING
     return 0;
 }
 
@@ -248,6 +255,7 @@ ssStop()
     genCustomConfig;
     pid=`cat $PIDFILE 2>/dev/null`;
     kill -SIGUSR1 $pid >/dev/null 2>&1;
+    /system/sbin/appInfo.sh set_status $PACKAGEID NOTRUNNING
     return 0;
 }
 

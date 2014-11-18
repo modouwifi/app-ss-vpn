@@ -6,7 +6,7 @@
 "author"          : "yinkeedai",
 "author_mail"     : "yinkeedai@163.com",
 "homepage"        : "shadowsocks.org",
-"version"         : "0.3.3",
+"version"         : "0.3.4",
 "release_date"    : "2014.10.28",
 "icon"            : "./res/icon.png",
 "location"        : "internal",

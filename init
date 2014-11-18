@@ -31,6 +31,7 @@ install()
     echo "\"exec\" : \"$CURDIR/sbin/ss.sh tpstart\"," >> "$TO_TP_CONF_FILE"
     echo "\"msgNum\" : 4" >> "$TO_TP_CONF_FILE"
     echo "}" >> "$TO_TP_CONF_FILE"
+    /system/sbin/appInfo.sh set_status $PACKAGEID NOTRUNNING
     #ln -s $CURDIR/lib/libgcc_s.so.1 /lib/libgcc_s.so.1 2>/dev/null
     return 0;
 }
@@ -117,6 +118,7 @@ case "$1" in
         exit 0;
         ;;
     "uninstall")
+        stop;
         uninstall;
         if [ "0" != "$?" ]; then
             exit 1;
