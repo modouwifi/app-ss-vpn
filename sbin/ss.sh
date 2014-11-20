@@ -24,7 +24,7 @@ TODNSMASQDIR="/data/conf/dns"
 CMDHEAD='"cmd":"'
 CMDTAIL='",'
 SHELLBUTTON1="$CURWDIR/../sbin/ss.sh config"
-SHELLBUTTON2="$CURWDIR/../sbin/ss.sh start"
+SHELLBUTTON2="$CURWDIR/../sbin/ss.sh starttp"
 SHELLBUTTON22="$CURWDIR/../sbin/ss.sh stop"
 CMDBUTTON1=${CMDHEAD}${SHELLBUTTON1}${CMDTAIL};
 CMDBUTTON2=${CMDHEAD}${SHELLBUTTON2}${CMDTAIL};
@@ -224,6 +224,40 @@ syncConfig()
 密码: $passwd" > $CUSTOMSETCONF
 }
 
+ssStart_tp()
+{
+    pdnsdEnable;
+    serveraddr=`head -n 1 $CUSTOMSETCONF | cut -d ' ' -f2-`;
+    serverport=`head -n 2 $CUSTOMSETCONF | tail -n 1 | cut -d ' ' -f2-`;
+    secmode=`head -n 3 $CUSTOMSETCONF | tail -n 1 | cut -d ' ' -f2-`;
+    passwd=`head -n 4 $CUSTOMSETCONF | tail -n 1 | cut -d ' ' -f2-`;
+    if [ "$serveraddr" == "" ]; then
+        serveraddr="0.0.0.0"
+    fi
+    if [ "$serverport" == "" ]; then
+        serverport=0
+    fi
+    if [ "$secmode" == "" ]; then
+        secmode="未设置"
+    fi
+    if [ "$passwd" == "" ]; then
+        passwd="未设置"
+    fi
+    /system/sbin/json4sh.sh "set" $DATAJSON service_ip_address value $serveraddr
+    /system/sbin/json4sh.sh "set" $DATAJSON port_shadow_socks  value $serverport
+    /system/sbin/json4sh.sh "set" $DATAJSON method_security    value $secmode
+    /system/sbin/json4sh.sh "set" $DATAJSON password_shadow_socks value $passwd
+    $SSSHELL $serveraddr $serverport $secmode $passwd &
+    chown matrix $PDNSDCONFILE 1>/dev/null 2>&1
+    $PDNSDBIN -c $PDNSDCONFILE &
+    sleep 1
+    genCustomConfig;
+    pid=`cat $PIDFILE 2>/dev/null`;
+    kill -SIGUSR1 $pid >/dev/null 2>&1;
+    /system/sbin/appInfo.sh set_status $PACKAGEID ISRUNNING
+    return 0;
+}
+
 ssStart()
 {
     pdnsdEnable;
@@ -271,6 +305,10 @@ case "$1" in
         ;;
     "syncConfig")
         syncConfig;
+        exit 0;
+        ;;
+      "starttp")
+        ssStart_tp;
         exit 0;
         ;;
     "start")
