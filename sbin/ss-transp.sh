@@ -26,6 +26,7 @@ ssIptablesAdd()
     iptables -t nat -A SHADOWSOCKS -d 127.0.0.0/8 -j RETURN
     iptables -t nat -A SHADOWSOCKS -d 10.0.0.0/8 -j RETURN
     iptables -t nat -A SHADOWSOCKS -d 192.168.0.0/16 -j RETURN
+    iptables -t nat -A SHADOWSOCKS -d 172.16.0.0/12 -j RETURN
     # anything else will be redirected to ss local port
     iptables -t nat -A SHADOWSOCKS -p tcp -j REDIRECT --to-ports 1080
     # apply the rules
@@ -60,7 +61,7 @@ ssIptablesAddOne()
 {
     iprange="$1"
     iptables -t nat -D SHADOWSOCKS -d $iprange -j RETURN 2>/dev/null
-    iptables -t nat -I SHADOWSOCKS 6 -d $iprange -j RETURN
+    iptables -t nat -I SHADOWSOCKS 7 -d $iprange -j RETURN
 }
 
 ssRedirStop()
@@ -85,7 +86,7 @@ genDefaultShell()
     echo "#!/bin/sh" > $DEFAULTWHITESHELL
     for lines in `cat $DEFAULTLIST`; do
         # if the format is wrong, we should get the back up
-        echo "iptables -t nat -I SHADOWSOCKS 6 -d $lines -j RETURN" >> $DEFAULTWHITESHELL
+        echo "iptables -t nat -I SHADOWSOCKS 7 -d $lines -j RETURN" >> $DEFAULTWHITESHELL
     done
     chmod +x $DEFAULTWHITESHELL
     return 0
